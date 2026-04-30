@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query } from "@anthropic-ai/claude-agent-sdk";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -22,74 +21,11 @@ function sanitizeMessages(input: unknown): ChatMessage[] {
     }));
 }
 
-function buildAgentPrompt(systemPrompt: string, messages: ChatMessage[]): string {
-  const conversation = messages
-    .map((message) => `${message.role.toUpperCase()}: ${message.content}`)
-    .join("\n\n");
-
-  return [
-    systemPrompt,
-    "",
-    "Conversation so far:",
-    conversation || "(empty)",
-    "",
-    "Instructions:",
-    "- Answer the latest user question.",
-    "- Use available tools (web/api/mcp) whenever they improve accuracy.",
-    "- If a tool is unavailable, continue with best effort and say what is missing.",
-  ].join("\n");
-}
-
-function collectAssistantTextFromEvent(value: unknown): string | null {
-  if (typeof value === "string") {
-    const text = value.trim();
-    return text.length > 0 ? text : null;
-  }
-
-  const chunks: string[] = [];
-  const seen = new WeakSet<object>();
-
-  function walk(node: unknown, inAssistantContext: boolean) {
-    if (typeof node !== "object" || node === null) return;
-    if (seen.has(node)) return;
-    seen.add(node);
-
-    if (Array.isArray(node)) {
-      for (const item of node) walk(item, inAssistantContext);
-      return;
-    }
-
-    const record = node as Record<string, unknown>;
-    const isAssistantNode = record.role === "assistant";
-    const nextAssistantContext = inAssistantContext || isAssistantNode;
-
-    // Anthropic-style content blocks.
-    if (
-      nextAssistantContext &&
-      record.type === "text" &&
-      typeof record.text === "string" &&
-      record.text.trim().length > 0
-    ) {
-      chunks.push(record.text.trim());
-    }
-
-    // Some events may expose string content directly on assistant nodes.
-    if (
-      nextAssistantContext &&
-      typeof record.content === "string" &&
-      record.content.trim().length > 0
-    ) {
-      chunks.push(record.content.trim());
-    }
-
-    for (const child of Object.values(record)) {
-      walk(child, nextAssistantContext);
-    }
-  }
-
-  walk(value, false);
-  if (chunks.length === 0) return null;
-  return chunks.join("\n").trim();
+function toAnthropicMessages(messages: ChatMessage[]) {
+  return messages.map((message) => ({
+    role: message.role,
+    content: message.content,
+  }));
 }
 
 export async function POST(req: NextRequest) {
@@ -116,37 +52,46 @@ export async function POST(req: NextRequest) {
   }
 
   const chatMessages = sanitizeMessages(messages);
-  const prompt = buildAgentPrompt(systemPrompt, chatMessages);
 
   try {
-    let reply = "";
-
-    for await (const event of query({
-      prompt,
-      options: {
-        model: "claude-sonnet-4-20250514",
-        maxTurns: 20,
-        permissionMode: "bypassPermissions",
-        allowDangerouslySkipPermissions: true,
-        allowedTools: [
-          "WebSearch",
-          "WebFetch",
-          "Read",
-          "Write",
-          "Bash",
-          "mcp__*",
-        ],
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
       },
-    })) {
-      const text = collectAssistantTextFromEvent(event);
-      if (text) {
-        reply = text;
-      }
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1800,
+        temperature: 0.4,
+        system: systemPrompt,
+        messages: toAnthropicMessages(chatMessages),
+      }),
+      cache: "no-store",
+    });
+
+    const payload = (await response.json()) as {
+      content?: Array<{ type?: string; text?: string }>;
+      error?: { message?: string };
+    };
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: payload.error?.message ?? `Anthropic request failed (${response.status})` },
+        { status: 502 },
+      );
     }
+
+    const reply = (payload.content ?? [])
+      .filter((block) => block.type === "text" && typeof block.text === "string")
+      .map((block) => block.text ?? "")
+      .join("\n")
+      .trim();
 
     if (!reply) {
       return NextResponse.json(
-        { error: "Agent completed without a text response." },
+        { error: "Model completed without a text response." },
         { status: 502 },
       );
     }

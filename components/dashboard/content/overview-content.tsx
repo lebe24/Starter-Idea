@@ -225,35 +225,35 @@ export function OverviewContent({
               </div>
             ))
           : metrics.map((metric) => {
-              const Icon = metric.icon;
-              return (
-                <div
-                  key={metric.label}
-                  className="bg-card rounded-2xl p-5 border border-border"
-                  style={{ boxShadow: cardShadow }}
-                >
-                  <div className="flex items-start justify-between mb-3">
+          const Icon = metric.icon;
+          return (
+            <div
+              key={metric.label}
+              className="bg-card rounded-2xl p-5 border border-border"
+              style={{ boxShadow: cardShadow }}
+            >
+              <div className="flex items-start justify-between mb-3">
                     <div className={`p-2.5 rounded-xl ${metric.color}`}>
                       <Icon className={`w-5 h-5 ${metric.iconColor}`} />
-                    </div>
+                </div>
                     {metric.trend ? (
-                      <div className={`flex items-center gap-1 text-sm ${
+                <div className={`flex items-center gap-1 text-sm ${
                         metric.trend === "up" ? "text-success" : "text-warning"
-                      }`}>
-                        {metric.trend === "up" ? (
-                          <TrendingUp className="w-4 h-4" />
-                        ) : (
-                          <TrendingDown className="w-4 h-4" />
-                        )}
+                }`}>
+                  {metric.trend === "up" ? (
+                    <TrendingUp className="w-4 h-4" />
+                  ) : (
+                    <TrendingDown className="w-4 h-4" />
+                  )}
                       </div>
                     ) : null}
                   </div>
                   <p className="text-2xl font-semibold text-foreground mb-1">{metric.value}</p>
                   <p className="text-sm text-muted-foreground">{metric.label}</p>
                   <p className="text-xs text-muted-foreground mt-1">{metric.subtitle}</p>
-                </div>
-              );
-            })}
+            </div>
+          );
+        })}
       </div>
 
       {/* Charts Row */}
@@ -297,43 +297,43 @@ export function OverviewContent({
             <ResponsiveContainer width="100%" height="100%">
               {chartMode === "score" ? (
                 <AreaChart data={scoreBuckets}>
-                  <defs>
+                <defs>
                     <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="oklch(0.55 0.18 250)" stopOpacity={0.25} />
-                      <stop offset="95%" stopColor="oklch(0.55 0.18 250)" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.92 0.005 250)" />
-                  <XAxis
+                    <stop offset="95%" stopColor="oklch(0.55 0.18 250)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.92 0.005 250)" />
+                <XAxis 
                     dataKey="label"
-                    tick={{ fill: "oklch(0.55 0.01 250)", fontSize: 12 }}
-                    axisLine={{ stroke: "oklch(0.92 0.005 250)" }}
-                  />
-                  <YAxis
-                    tick={{ fill: "oklch(0.55 0.01 250)", fontSize: 12 }}
-                    axisLine={{ stroke: "oklch(0.92 0.005 250)" }}
-                  />
-                  <Tooltip
+                  tick={{ fill: "oklch(0.55 0.01 250)", fontSize: 12 }}
+                  axisLine={{ stroke: "oklch(0.92 0.005 250)" }}
+                />
+                <YAxis 
+                  tick={{ fill: "oklch(0.55 0.01 250)", fontSize: 12 }}
+                  axisLine={{ stroke: "oklch(0.92 0.005 250)" }}
+                />
+                <Tooltip 
                     formatter={(value, _, payload) => {
                       const count = String(value);
                       const label = payload?.payload?.label ?? "";
                       return [`${count} ideas score between ${label}`, "Density"];
                     }}
-                    contentStyle={{
-                      backgroundColor: "white",
-                      border: "1px solid oklch(0.92 0.005 250)",
-                      borderRadius: "12px",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                    }}
-                  />
-                  <Area
-                    type="monotone"
+                  contentStyle={{
+                    backgroundColor: "white",
+                    border: "1px solid oklch(0.92 0.005 250)",
+                    borderRadius: "12px",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <Area
+                  type="monotone"
                     dataKey="count"
-                    stroke="oklch(0.55 0.18 250)"
-                    strokeWidth={2}
+                  stroke="oklch(0.55 0.18 250)"
+                  strokeWidth={2}
                     fill="url(#scoreGradient)"
-                  />
-                </AreaChart>
+                />
+              </AreaChart>
               ) : (
                 <BarChart data={tacticRevenue} layout="vertical" barCategoryGap="28%">
                   <CartesianGrid
@@ -430,7 +430,7 @@ export function OverviewContent({
                 PH
               </button>
             ) : null}
-          </div>
+                </div>
           {feedError ? <p className="text-xs text-warning mb-3">{feedError}</p> : null}
           <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1">
             {isLoadingFeed
@@ -529,8 +529,8 @@ export function OverviewContent({
           type="button"
           onClick={() => onSectionChange("chat")}
           className="text-left bg-card rounded-2xl p-5 border border-border hover:bg-muted/40 transition-colors"
-          style={{ boxShadow: cardShadow }}
-        >
+        style={{ boxShadow: cardShadow }}
+      >
           <Sparkles className="w-5 h-5 text-chart-2 mb-3" />
           <p className="font-semibold text-foreground">Ask AI</p>
           <p className="text-sm text-muted-foreground">Chat about any idea {"->"}</p>

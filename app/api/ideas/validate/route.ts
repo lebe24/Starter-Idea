@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query } from "@anthropic-ai/claude-agent-sdk";
 
 type IdeaPayload = {
   idea: string;
@@ -64,6 +63,45 @@ function extractJson(text: string): { isValid: boolean; score: number; summary: 
   }
 }
 
+async function callAnthropicJson(prompt: string, apiKey: string): Promise<string> {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 700,
+      temperature: 0.2,
+      messages: [{ role: "user", content: prompt }],
+    }),
+    cache: "no-store",
+  });
+
+  const payload = (await response.json()) as {
+    error?: { message?: string };
+    content?: Array<{ type?: string; text?: string }>;
+  };
+
+  if (!response.ok) {
+    throw new Error(payload.error?.message ?? `Anthropic API failed (${response.status})`);
+  }
+
+  const text = (payload.content ?? [])
+    .filter((block) => block.type === "text" && typeof block.text === "string")
+    .map((block) => block.text ?? "")
+    .join("\n")
+    .trim();
+
+  if (!text) {
+    throw new Error("Anthropic API returned an empty response.");
+  }
+
+  return text;
+}
+
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: "ANTHROPIC_API_KEY is not configured." }, { status: 503 });
@@ -97,22 +135,7 @@ ${JSON.stringify(payload, null, 2)}
 `.trim();
 
   try {
-    const parts: string[] = [];
-    for await (const event of query({
-      prompt,
-      options: {
-        model: "claude-sonnet-4-20250514",
-        maxTurns: 3,
-        permissionMode: "bypassPermissions",
-        allowDangerouslySkipPermissions: true,
-        allowedTools: [],
-      },
-    })) {
-      const text = collectText(event).trim();
-      if (text) parts.push(text);
-    }
-
-    const finalText = parts.join("\n");
+    const finalText = await callAnthropicJson(prompt, process.env.ANTHROPIC_API_KEY);
     const parsed = extractJson(finalText);
     if (!parsed) {
       return NextResponse.json(
