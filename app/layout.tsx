@@ -23,8 +23,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Pulse | Engineering Metrics & Incident Response',
-  description: 'Monitor system health, track incidents, manage deployments, and analyze engineering performance.',
+  title: 'Starter Idea | Micro-SaaS Ideas Explorer',
+  description: 'Discover, validate, and track high-potential Micro-SaaS ideas with live market signals and AI insights.',
   generator: 'v0.app',
   icons: {
     icon: [

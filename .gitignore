@@ -39,6 +39,8 @@ secrets.json
 # local editor/system files
 .DS_Store
 .cursor/
+doc/
+doc
 
 # vercel
 .vercel
