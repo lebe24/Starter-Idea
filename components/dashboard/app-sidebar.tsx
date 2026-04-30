@@ -1,27 +1,28 @@
 "use client";
 
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { Section } from "@/app/page";
 import {
   LayoutDashboard,
-  AlertTriangle,
-  Rocket,
-  Gauge,
-  Bug,
-  Shield,
   Phone,
-  Server,
-  FileText,
+  Brain,
+  MessageSquare,
   Settings,
-  Search,
   Moon,
-  Zap,
+  PanelRight,
+  PanelRightClose,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface AppSidebarProps {
   activeSection: Section;
   onSectionChange: (section: Section) => void;
+  isRightPanelOpen: boolean;
+  onToggleRightPanel: () => void;
+  hasActiveChat?: boolean;
 }
 
 interface NavItem {
@@ -32,73 +33,82 @@ interface NavItem {
   badgeColor?: "red" | "yellow" | "green";
 }
 
-const favorites: NavItem[] = [
-  { id: "incidents", label: "Active Incidents", icon: AlertTriangle },
-  { id: "deployments", label: "Recent Deploys", icon: Rocket },
-];
-
 const mainMenu: NavItem[] = [
   { id: "overview", label: "Dashboard", icon: LayoutDashboard },
-  { id: "incidents", label: "Incidents", icon: AlertTriangle, badge: 3, badgeColor: "red" },
-  { id: "deployments", label: "Deployments", icon: Rocket, badge: 8 },
-  { id: "performance", label: "Performance", icon: Gauge },
-  { id: "errors", label: "Error Tracking", icon: Bug, badge: 24, badgeColor: "yellow" },
-  { id: "sla", label: "SLA & Uptime", icon: Shield },
-  { id: "oncall", label: "On-Call", icon: Phone },
-  { id: "services", label: "Services", icon: Server },
-  { id: "postmortems", label: "Postmortems", icon: FileText },
+  // { id: "oncall", label: "On-Call", icon: Phone },
+  { id: "ideas", label: "Ideas", icon: Brain },
+  { id: "chat", label: "Assistant", icon: MessageSquare },
 ];
 
-export function AppSidebar({ activeSection, onSectionChange }: AppSidebarProps) {
+export function AppSidebar({
+  activeSection,
+  onSectionChange,
+  isRightPanelOpen,
+  onToggleRightPanel,
+  hasActiveChat = false,
+}: AppSidebarProps) {
+  const [isLeftPanelCollapsed, setIsLeftPanelCollapsed] = useState(false);
+
   return (
-    <aside className="w-[260px] h-screen bg-card border-r border-border flex flex-col shrink-0">
+    <aside
+      className={cn(
+        "h-screen bg-card border-r border-border flex flex-col shrink-0 transition-[width] duration-200",
+        isLeftPanelCollapsed ? "w-[88px]" : "w-[260px]"
+      )}
+    >
       {/* Logo */}
       <div className="h-16 px-5 flex items-center gap-3 border-b border-border">
-        <div className="w-9 h-9 rounded-xl bg-chart-1 flex items-center justify-center">
-          <Zap className="w-5 h-5 text-primary-foreground" />
+        <div
+          className={cn(
+            "rounded-xl bg-chart-1 flex items-center justify-center transition-all",
+            isLeftPanelCollapsed ? "w-8 h-8" : "w-9 h-9 sm:w-10 sm:h-10"
+          )}
+        >
+          <span className={cn("text-primary-foreground font-semibold", isLeftPanelCollapsed ? "text-[10px]" : "text-xs sm:text-sm")}>
+            SI
+          </span>
         </div>
-        <span className="font-semibold text-foreground text-[15px] tracking-tight">
-          Pulse
+        <span className={cn("font-semibold text-foreground text-[15px] tracking-tight", isLeftPanelCollapsed && "hidden")}>
+          Starter Idea
         </span>
-        <span className="ml-auto px-2 py-0.5 text-[10px] font-medium bg-success/10 text-success rounded-full">
-          Live
-        </span>
+        <button
+          type="button"
+          onClick={() => setIsLeftPanelCollapsed((prev) => !prev)}
+          className="ml-auto p-1.5 rounded-lg hover:bg-muted transition-colors"
+          aria-label={isLeftPanelCollapsed ? "Expand left panel" : "Collapse left panel"}
+        >
+          {isLeftPanelCollapsed ? (
+            <PanelLeftOpen className="w-4 h-4 text-muted-foreground" />
+          ) : (
+            <PanelLeftClose className="w-4 h-4 text-muted-foreground" />
+          )}
+        </button>
       </div>
 
       {/* Search */}
       <div className="px-4 py-4">
         <button
           type="button"
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-muted/60 hover:bg-muted transition-colors"
+          onClick={onToggleRightPanel}
+          className={cn(
+            "w-full mt-2 flex items-center px-3.5 py-2.5 rounded-xl bg-muted/40 hover:bg-muted transition-colors",
+            isLeftPanelCollapsed ? "justify-center" : "gap-3"
+          )}
         >
-          <Search className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground flex-1 text-left">Search incidents...</span>
-          <kbd className="text-[11px] text-muted-foreground bg-background px-1.5 py-0.5 rounded-md border border-border font-mono">
-            /
-          </kbd>
+          {isRightPanelOpen ? (
+            <PanelRightClose className="w-4 h-4 text-muted-foreground" />
+          ) : (
+            <PanelRight className="w-4 h-4 text-muted-foreground" />
+          )}
+          <span className={cn("text-sm text-muted-foreground", isLeftPanelCollapsed && "hidden")}>
+            {isRightPanelOpen ? "Hide Filters Panel" : "Show Filters Panel"}
+          </span>
         </button>
-      </div>
-
-      {/* Favorites */}
-      <div className="px-4 mb-2">
-        <p className="px-2 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-          Quick Access
-        </p>
-        <nav className="space-y-0.5">
-          {favorites.map((item) => (
-            <NavButton
-              key={`fav-${item.id}`}
-              item={item}
-              isActive={false}
-              onClick={() => onSectionChange(item.id)}
-            />
-          ))}
-        </nav>
       </div>
 
       {/* Main Menu */}
       <div className="px-4 flex-1">
-        <p className="px-2 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+        <p className={cn("px-2 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider", isLeftPanelCollapsed && "hidden")}>
           Operations
         </p>
         <nav className="space-y-0.5">
@@ -108,9 +118,12 @@ export function AppSidebar({ activeSection, onSectionChange }: AppSidebarProps) 
               item={item}
               isActive={activeSection === item.id}
               onClick={() => onSectionChange(item.id)}
+              collapsed={isLeftPanelCollapsed}
+              showConversationDot={item.id === "chat" && hasActiveChat}
             />
           ))}
         </nav>
+
       </div>
 
       {/* Settings & User */}
@@ -119,20 +132,21 @@ export function AppSidebar({ activeSection, onSectionChange }: AppSidebarProps) 
           item={{ id: "settings", label: "Settings", icon: Settings }}
           isActive={activeSection === "settings"}
           onClick={() => onSectionChange("settings")}
+          collapsed={isLeftPanelCollapsed}
         />
         
         {/* User Profile */}
-        <div className="flex items-center gap-3 px-2 py-3 rounded-xl hover:bg-muted/60 transition-colors cursor-pointer">
+        <div className={cn("flex items-center gap-3 px-2 py-3 rounded-xl hover:bg-muted/60 transition-colors cursor-pointer", isLeftPanelCollapsed && "justify-center")}>
           <div className="w-9 h-9 rounded-full bg-chart-1/20 flex items-center justify-center">
             <span className="text-chart-1 text-sm font-medium">JD</span>
           </div>
-          <div className="flex-1 min-w-0">
+          <div className={cn("flex-1 min-w-0", isLeftPanelCollapsed && "hidden")}>
             <p className="text-sm font-medium text-foreground truncate">John Doe</p>
             <p className="text-xs text-muted-foreground truncate">SRE Lead</p>
           </div>
-          <button 
+          <button
             type="button"
-            className="p-1.5 rounded-lg hover:bg-muted transition-colors"
+            className={cn("p-1.5 rounded-lg hover:bg-muted transition-colors", isLeftPanelCollapsed && "hidden")}
             aria-label="Toggle theme"
           >
             <Moon className="w-4 h-4 text-muted-foreground" />
@@ -147,9 +161,11 @@ interface NavButtonProps {
   item: NavItem;
   isActive: boolean;
   onClick: () => void;
+  collapsed?: boolean;
+  showConversationDot?: boolean;
 }
 
-function NavButton({ item, isActive, onClick }: NavButtonProps) {
+function NavButton({ item, isActive, onClick, collapsed = false, showConversationDot = false }: NavButtonProps) {
   const Icon = item.icon;
   
   const badgeColorClass = {
@@ -163,7 +179,8 @@ function NavButton({ item, isActive, onClick }: NavButtonProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200",
+        "w-full flex items-center px-3 py-2.5 rounded-xl text-sm transition-all duration-200",
+        collapsed ? "justify-center" : "gap-3",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         isActive
           ? "bg-primary text-primary-foreground font-medium shadow-sm"
@@ -171,21 +188,24 @@ function NavButton({ item, isActive, onClick }: NavButtonProps) {
       )}
     >
       <Icon className="w-[18px] h-[18px] shrink-0" />
-      <span className="flex-1 text-left">{item.label}</span>
-      {item.badge && (
+      <span className={cn("flex-1 text-left", collapsed && "hidden")}>{item.label}</span>
+      {!collapsed && item.badge ? (
         <span
           className={cn(
             "text-xs font-medium px-2 py-0.5 rounded-full",
             isActive
               ? "bg-primary-foreground/20 text-primary-foreground"
-              : item.badgeColor 
+              : item.badgeColor
                 ? badgeColorClass[item.badgeColor]
-                : "bg-muted text-muted-foreground"
+                : "bg-muted text-muted-foreground",
           )}
         >
           {item.badge}
         </span>
-      )}
+      ) : null}
+      {!collapsed && showConversationDot ? (
+        <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden />
+      ) : null}
     </button>
   );
 }

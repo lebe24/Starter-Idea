@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import type { Section } from "@/app/page";
+import type { IdeaFilters } from "@/lib/ideas-data";
+import type { ChatMessage } from "@/lib/chat-types";
 import { OverviewContent } from "./content/overview-content";
 import { IncidentsContent } from "./content/incidents-content";
 import { DeploymentsContent } from "./content/deployments-content";
@@ -11,17 +14,27 @@ import { OncallContent } from "./content/oncall-content";
 import { ServicesContent } from "./content/services-content";
 import { PostmortemsContent } from "./content/postmortems-content";
 import { SettingsContent } from "./content/settings-content";
-import { Bell, Calendar, RefreshCw, Plus, AlertCircle } from "lucide-react";
+import { IdeaChatContent } from "./content/IdeaChatContent";
+import { Bell, Calendar, RefreshCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AddIdeaModal } from "./add-idea-modal";
 
 interface MainContentProps {
   activeSection: Section;
+  ideaFilters: IdeaFilters;
+  onIdeaFiltersChange: (next: IdeaFilters) => void;
+  chatHistory: ChatMessage[];
+  onChatHistoryChange: (history: ChatMessage[]) => void;
+  onSectionChange: (section: Section) => void;
+  initialPrompt: string | null;
+  onInitialPromptConsumed: () => void;
+  onAskAIAboutIdea: (ideaName: string) => void;
 }
 
 const sectionConfig: Record<Section, { title: string; subtitle: string }> = {
   overview: {
-    title: "System Overview",
-    subtitle: "Real-time Engineering Metrics",
+    title: "Saas Overview",
+    subtitle: "Real-time Metrics",
   },
   incidents: {
     title: "Incidents",
@@ -47,9 +60,9 @@ const sectionConfig: Record<Section, { title: string; subtitle: string }> = {
     title: "On-Call",
     subtitle: "Schedule & Response Metrics",
   },
-  services: {
-    title: "Services",
-    subtitle: "Service Catalog & Health",
+  ideas: {
+    title: "Ideas",
+    subtitle: "Micro-SaaS Ideas Database",
   },
   postmortems: {
     title: "Postmortems",
@@ -59,15 +72,36 @@ const sectionConfig: Record<Section, { title: string; subtitle: string }> = {
     title: "Settings",
     subtitle: "Configuration & Integrations",
   },
+  chat: {
+    title: "Chat with AI",
+    subtitle: "Micro-SaaS ideas chat",
+  },
 };
 
-export function MainContent({ activeSection }: MainContentProps) {
+export function MainContent({
+  activeSection,
+  ideaFilters,
+  onIdeaFiltersChange,
+  chatHistory,
+  onChatHistoryChange,
+  onSectionChange,
+  initialPrompt,
+  onInitialPromptConsumed,
+  onAskAIAboutIdea,
+}: MainContentProps) {
   const config = sectionConfig[activeSection];
+  const [isAddIdeaOpen, setIsAddIdeaOpen] = useState(false);
 
   const renderContent = () => {
     switch (activeSection) {
       case "overview":
-        return <OverviewContent />;
+        return (
+          <OverviewContent
+            onSectionChange={onSectionChange}
+            ideaFilters={ideaFilters}
+            onIdeaFiltersChange={onIdeaFiltersChange}
+          />
+        );
       case "incidents":
         return <IncidentsContent />;
       case "deployments":
@@ -80,16 +114,43 @@ export function MainContent({ activeSection }: MainContentProps) {
         return <SlaContent />;
       case "oncall":
         return <OncallContent />;
-      case "services":
-        return <ServicesContent />;
+      case "ideas":
+        return <ServicesContent ideaFilters={ideaFilters} />;
+      case "chat":
+        return (
+          <IdeaChatContent
+            ideaFilters={ideaFilters}
+            chatHistory={chatHistory}
+            onChatHistoryChange={onChatHistoryChange}
+            onSectionChange={onSectionChange}
+            initialPrompt={initialPrompt}
+            onInitialPromptConsumed={onInitialPromptConsumed}
+          />
+        );
       case "postmortems":
         return <PostmortemsContent />;
       case "settings":
         return <SettingsContent />;
       default:
-        return <OverviewContent />;
+        return (
+          <OverviewContent
+            onSectionChange={onSectionChange}
+            ideaFilters={ideaFilters}
+            onIdeaFiltersChange={onIdeaFiltersChange}
+          />
+        );
     }
   };
+
+  if (activeSection === "chat") {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div key={activeSection} className="animate-fade-in flex min-h-0 flex-1 flex-col">
+          {renderContent()}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -106,7 +167,7 @@ export function MainContent({ activeSection }: MainContentProps) {
           {/* Time Range */}
           <Button variant="outline" size="sm" className="gap-2 bg-transparent">
             <Calendar className="w-4 h-4" />
-            <span>Last 24 hours</span>
+            <span>Last updated</span>
           </Button>
 
           {/* Refresh */}
@@ -126,9 +187,13 @@ export function MainContent({ activeSection }: MainContentProps) {
           </button>
 
           {/* Primary Action */}
-          <Button size="sm" className="gap-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground">
-            <AlertCircle className="w-4 h-4" />
-            <span>Report Incident</span>
+          <Button
+            size="sm"
+            className="gap-2 bg-success hover:bg-success/90 text-success-foreground"
+            onClick={() => setIsAddIdeaOpen(true)}
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Your Idea</span>
           </Button>
         </div>
       </header>
@@ -139,6 +204,7 @@ export function MainContent({ activeSection }: MainContentProps) {
           {renderContent()}
         </div>
       </main>
+      <AddIdeaModal open={isAddIdeaOpen} onOpenChange={setIsAddIdeaOpen} />
     </div>
   );
 }
