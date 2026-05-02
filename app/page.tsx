@@ -30,11 +30,11 @@ export default function HomePage() {
               Your idea worthless until you build it.
             </h1>
             <p className="mt-8 max-w-md text-lg font-normal leading-relaxed text-[oklch(0.38_0.02_265)] motion-safe:animate-[landing-enter_0.9s_ease-out_0.12s_both]">
-              Live signals, validation context, and a dashboard that stays out of your way—so
-              you can choose the next small bet with clarity.
+              Explore 190+ Saas idea, chat with AI about any idea, see the market size, competitors, and more.
+              And finally build the idea.
             </p>
             <nav
-              className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-4 motion-safe:animate-[landing-enter_0.9s_ease-out_0.24s_both]"
+              className="mt-12 motion-safe:animate-[landing-enter_0.9s_ease-out_0.24s_both]"
               aria-label="Primary"
             >
               <Link
@@ -49,18 +49,12 @@ export default function HomePage() {
                   →
                 </span>
               </Link>
-              <Link
-                href="/explore"
-                className="text-base font-normal text-[oklch(0.42_0.02_265)] underline decoration-[oklch(0.88_0.02_265)] decoration-1 underline-offset-[6px] transition hover:text-[oklch(0.28_0.02_265)] hover:decoration-[oklch(0.55_0.02_265)]"
-              >
-                Explore one idea in depth
-              </Link>
             </nav>
           </div>
         </main>
 
         <footer className="mt-auto pt-16 font-mono text-[10px] uppercase tracking-[0.2em] text-[oklch(0.55_0.02_265)]">
-          Signals · validation · quiet craft
+          Explore · validate · And build it
         </footer>
       </div>
       <style>{`
