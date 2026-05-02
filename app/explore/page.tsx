@@ -26,9 +26,6 @@ import {
 import { Markdown } from "@/components/prompt-kit/markdown";
 import type { IdeaRecord } from "@/lib/ideas-data";
 
-const cardShadow =
-  "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
-
 function splitCsv(value: string): string[] {
   return value
     .split(",")
@@ -177,21 +174,21 @@ function ExplorePageInner() {
     return (
       <main className="min-h-screen bg-background">
         <div className="mx-auto max-w-4xl px-4 py-5 md:px-6">
-          <Skeleton className="h-12 w-full rounded-2xl animate-shimmer mb-6" />
+          <Skeleton className="h-12 w-full rounded-lg animate-shimmer mb-6" />
           <div className="space-y-5">
             <div className="flex gap-3">
               <Skeleton className="h-8 w-8 rounded-full animate-shimmer" />
-              <Skeleton className="h-24 w-full rounded-2xl animate-shimmer" />
+              <Skeleton className="h-24 w-full rounded-lg animate-shimmer" />
             </div>
             <div className="flex gap-3 justify-end">
-              <Skeleton className="h-16 w-[70%] rounded-2xl animate-shimmer" />
+              <Skeleton className="h-16 w-[70%] rounded-lg animate-shimmer" />
             </div>
             <div className="flex gap-3">
               <Skeleton className="h-8 w-8 rounded-full animate-shimmer" />
-              <Skeleton className="h-40 w-full rounded-2xl animate-shimmer" />
+              <Skeleton className="h-40 w-full rounded-lg animate-shimmer" />
             </div>
           </div>
-          <Skeleton className="h-14 w-full rounded-2xl animate-shimmer mt-6" />
+          <Skeleton className="h-14 w-full rounded-lg animate-shimmer mt-6" />
         </div>
       </main>
     );
@@ -201,16 +198,16 @@ function ExplorePageInner() {
     return (
       <main className="min-h-screen bg-background">
         <div className="mx-auto max-w-4xl px-4 py-5 md:px-6">
-          <div className="border border-border bg-card rounded-2xl p-4 flex items-center justify-between mb-6" style={{ boxShadow: cardShadow }}>
+          <div className="border border-border bg-card rounded-lg p-4 flex items-center justify-between mb-6">
             <p className="text-sm text-muted-foreground">Idea Explorer</p>
-            <Link href="/">
+            <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="gap-2">
                 <ArrowLeft className="w-4 h-4" />
                 Back
               </Button>
             </Link>
           </div>
-          <div className="bg-card border border-border rounded-2xl p-8 text-center" style={{ boxShadow: cardShadow }}>
+          <div className="bg-card border border-border rounded-lg p-8 text-center">
             <h1 className="text-2xl font-semibold text-foreground mb-2">Idea not found</h1>
             <p className="text-muted-foreground">
               We could not find the selected idea context. Go back and click Explore again.
@@ -224,10 +221,10 @@ function ExplorePageInner() {
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto max-w-6xl px-4 py-5 md:px-6 flex flex-col h-screen">
-        <header className="border border-border bg-card rounded-2xl p-3.5 flex items-center justify-between shrink-0" style={{ boxShadow: cardShadow }}>
+        <header className="border border-border bg-card rounded-lg p-3.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
             
-            <Link href="/">
+            <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="gap-2">
                 <ArrowLeft className="w-4 h-4" />
                 Back
@@ -263,7 +260,7 @@ function ExplorePageInner() {
           }`}
         >
           <div className="min-h-0">
-            <ChatContainerRoot className="h-full rounded-2xl border border-border bg-card/50 px-3 py-4 md:px-4">
+            <ChatContainerRoot className="h-full rounded-lg border border-border bg-card/50 px-3 py-4 md:px-4">
               <ChatContainerContent className="space-y-5">
                 {chatMessages.map((message) => {
                   const isUser = message.role === "user";
@@ -278,7 +275,7 @@ function ExplorePageInner() {
                         </div>
                       ) : null}
                       <div
-                        className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap ${
+                        className={`max-w-[82%] rounded-lg px-4 py-3 text-sm whitespace-pre-wrap ${
                           isUser
                             ? "rounded-br-sm bg-primary text-primary-foreground"
                             : "rounded-bl-sm bg-card border border-border text-foreground"
@@ -307,7 +304,7 @@ function ExplorePageInner() {
                 })}
 
                 {isSubmitting ? (
-                  <div className="rounded-2xl border border-border bg-card px-4 py-3">
+                  <div className="rounded-lg border border-border bg-card px-4 py-3">
                     <Reasoning isStreaming>
                       <ReasoningTrigger className="text-sm font-medium">
                         Reasoning
@@ -336,7 +333,7 @@ function ExplorePageInner() {
           </div>
 
           <aside className={`min-h-0 overflow-y-auto ${isChatExpanded ? "hidden" : ""}`}>
-            <div className="bg-card border border-border rounded-2xl p-4 space-y-4" style={{ boxShadow: cardShadow }}>
+            <div className="bg-card border border-border rounded-lg p-4 space-y-4">
               <div>
                 <p className="text-xs text-muted-foreground">Idea Snapshot</p>
                 <p className="text-sm text-foreground font-medium">{idea.idea}</p>
@@ -437,11 +434,11 @@ function ExplorePageFallback() {
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto max-w-4xl px-4 py-5 md:px-6">
-        <Skeleton className="mb-6 h-12 w-full animate-shimmer rounded-2xl" />
+        <Skeleton className="mb-6 h-12 w-full animate-shimmer rounded-lg" />
         <div className="space-y-5">
           <div className="flex gap-3">
             <Skeleton className="h-8 w-8 animate-shimmer rounded-full" />
-            <Skeleton className="h-24 w-full animate-shimmer rounded-2xl" />
+            <Skeleton className="h-24 w-full animate-shimmer rounded-lg" />
           </div>
         </div>
       </div>

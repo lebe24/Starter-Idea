@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Section } from "@/app/page";
+import type { Section } from "@/lib/dashboard-section";
 import type { IdeaFilters } from "@/lib/ideas-data";
 import type { ChatMessage } from "@/lib/chat-types";
 import { OverviewContent } from "./content/overview-content";
@@ -155,51 +155,50 @@ export function MainContent({
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
       {/* Header */}
-      <header className="h-16 px-8 flex items-center justify-between border-b border-border bg-card shrink-0">
-        <div>
-          <h1 className="text-lg font-semibold text-foreground tracking-tight">
+      <header className="flex h-[4.25rem] shrink-0 items-center justify-between border-b border-border/80 bg-background/80 px-8 backdrop-blur-[6px]">
+        <div className="min-w-0 border-l-2 border-accent pl-4">
+          <h1 className="font-serif text-xl font-normal tracking-tight text-foreground md:text-2xl">
             {config.title}
           </h1>
-          <p className="text-sm text-muted-foreground">{config.subtitle}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            {config.subtitle}
+          </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Time Range */}
-          <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-            <Calendar className="w-4 h-4" />
-            <span>Last updated</span>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+            <Calendar className="h-4 w-4" />
+            <span className="hidden sm:inline">Last updated</span>
           </Button>
 
-          {/* Refresh */}
-          <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-            <RefreshCw className="w-4 h-4" />
-            <span>Refresh</span>
+          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+            <RefreshCw className="h-4 w-4" />
+            <span className="hidden sm:inline">Refresh</span>
           </Button>
 
-          {/* Alerts */}
           <button
             type="button"
-            className="relative p-2 rounded-xl hover:bg-muted transition-colors"
+            className="relative rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
             aria-label="Alerts"
           >
-            <Bell className="w-5 h-5 text-muted-foreground" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full animate-pulse" />
+            <Bell className="h-5 w-5" />
+            <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />
           </button>
 
-          {/* Primary Action */}
           <Button
             size="sm"
-            className="gap-2 bg-success hover:bg-success/90 text-success-foreground"
+            variant="outline"
+            className="gap-2 border-border/90 bg-background hover:bg-muted/50"
             onClick={() => setIsAddIdeaOpen(true)}
           >
-            <Plus className="w-4 h-4" />
-            <span>Add Your Idea</span>
+            <Plus className="h-4 w-4" />
+            <span>Add idea</span>
           </Button>
         </div>
       </header>
 
       {/* Content */}
-      <main className="flex-1 overflow-y-auto p-8">
+      <main className="flex-1 overflow-y-auto p-6 md:p-8">
         <div key={activeSection} className="animate-fade-in">
           {renderContent()}
         </div>

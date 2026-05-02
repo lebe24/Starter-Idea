@@ -35,7 +35,7 @@ export function MessageBubble({
   if (message.role === "user") {
     return (
       <div className="flex items-end justify-end gap-3">
-        <div className="max-w-[min(100%,85%)] rounded-2xl rounded-br-sm bg-primary px-4 py-3 text-sm text-primary-foreground shadow-sm">
+        <div className="max-w-[min(100%,85%)] rounded-lg rounded-br-sm bg-primary px-4 py-3 text-sm text-primary-foreground shadow-sm">
           <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
           <p className="mt-2 text-right text-[11px] text-primary-foreground/75">
             {message.timestamp.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
@@ -50,7 +50,7 @@ export function MessageBubble({
 
   if (message.isError) {
     return (
-      <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3">
+      <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3">
         <div className="flex items-start gap-2">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
           <div className="min-w-0 flex-1 space-y-2">
@@ -75,7 +75,7 @@ export function MessageBubble({
       </div>
       <div
         className={cn(
-          "max-w-[min(100%,85%)] rounded-2xl border px-4 py-3 text-sm leading-relaxed shadow-sm",
+          "max-w-[min(100%,85%)] rounded-lg border px-4 py-3 text-sm leading-relaxed shadow-sm",
           isNotice
             ? "border-border bg-muted/40 text-muted-foreground"
             : "rounded-bl-sm border-border bg-background text-foreground",

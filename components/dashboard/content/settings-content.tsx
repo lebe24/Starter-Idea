@@ -55,11 +55,11 @@ export function SettingsContent() {
   return (
     <div className="max-w-4xl space-y-6">
       {/* Profile Section */}
-      <div className="bg-card rounded-2xl border border-border p-6">
+      <div className="bg-card rounded-lg border border-border p-6">
         <h3 className="font-semibold text-foreground mb-6">Profile Settings</h3>
-        
+
         <div className="flex items-start gap-6">
-          <div className="w-20 h-20 rounded-2xl bg-chart-1/10 text-chart-1 flex items-center justify-center text-2xl font-semibold">
+          <div className="w-20 h-20 rounded-lg bg-chart-1/10 text-chart-1 flex items-center justify-center text-2xl font-semibold">
             JD
           </div>
           <div className="flex-1">
@@ -109,7 +109,7 @@ export function SettingsContent() {
       </div>
 
       {/* Quick Settings */}
-      <div className="bg-card rounded-2xl border border-border overflow-hidden">
+      <div className="bg-card rounded-lg border border-border overflow-hidden">
         <h3 className="font-semibold text-foreground p-6 pb-4">Quick Settings</h3>
         <div className="divide-y divide-border">
           {settingsSections.map((section) => {
@@ -135,7 +135,7 @@ export function SettingsContent() {
       </div>
 
       {/* Integrations */}
-      <div className="bg-card rounded-2xl border border-border p-6">
+      <div className="bg-card rounded-lg border border-border p-6">
         <h3 className="font-semibold text-foreground mb-6">Integrations</h3>
         <div className="space-y-3">
           {integrations.map((integration) => (

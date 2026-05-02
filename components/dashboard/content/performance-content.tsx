@@ -49,7 +49,6 @@ const serviceLatencies = [
   { name: "Notification Service", p50: 12, p95: 34, p99: 67, status: "healthy" },
 ];
 
-const cardShadow = "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
 
 export function PerformanceContent() {
   return (
@@ -59,9 +58,7 @@ export function PerformanceContent() {
         {metrics.map((metric) => (
           <div
             key={metric.label}
-            className="bg-card rounded-2xl p-5 border border-border"
-            style={{ boxShadow: cardShadow }}
-          >
+            className="bg-card rounded-lg p-5 border border-border">
             <p className="text-sm text-muted-foreground mb-1">{metric.label}</p>
             <div className="flex items-end justify-between">
               <p className="text-2xl font-semibold text-foreground">{metric.value}</p>
@@ -84,9 +81,7 @@ export function PerformanceContent() {
       <div className="grid grid-cols-2 gap-6">
         {/* Latency Chart */}
         <div
-          className="bg-card rounded-2xl p-6 border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg p-6 border border-border">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-semibold text-foreground">Latency Distribution</h3>
@@ -138,9 +133,7 @@ export function PerformanceContent() {
 
         {/* Throughput Chart */}
         <div
-          className="bg-card rounded-2xl p-6 border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg p-6 border border-border">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-semibold text-foreground">Request Throughput</h3>
@@ -189,9 +182,7 @@ export function PerformanceContent() {
 
       {/* Service Latencies Table */}
       <div
-        className="bg-card rounded-2xl border border-border"
-        style={{ boxShadow: cardShadow }}
-      >
+        className="bg-card rounded-lg border border-border">
         <div className="p-6 border-b border-border">
           <h3 className="text-base font-semibold text-foreground">Service Latencies</h3>
           <p className="text-sm text-muted-foreground">Current latency percentiles by service</p>

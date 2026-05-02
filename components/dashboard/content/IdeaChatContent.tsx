@@ -13,7 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { Section } from "@/app/page";
+import type { Section } from "@/lib/dashboard-section";
 import { filterIdeas, type IdeaFilters, type IdeaRecord } from "@/lib/ideas-data";
 import type { ChatContext, ChatMessage } from "@/lib/chat-types";
 import { buildSystemPrompt, detectMentionedIdea } from "@/lib/chat-utils";

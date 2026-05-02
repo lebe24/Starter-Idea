@@ -1,25 +1,28 @@
 import React from "react"
 import type { Metadata, Viewport } from 'next'
-import { DM_Sans, Source_Serif_4, JetBrains_Mono } from 'next/font/google'
+import { Instrument_Serif, JetBrains_Mono, Newsreader } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
-const dmSans = DM_Sans({ 
+const newsreader = Newsreader({
   subsets: ["latin"],
-  variable: '--font-dm-sans',
-  display: 'swap',
+  weight: ["400", "500", "600"],
+  variable: "--font-app-sans",
+  display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({ 
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  variable: '--font-source-serif',
-  display: 'swap',
+  weight: "400",
+  variable: "--font-app-serif",
+  display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({ 
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: '--font-jetbrains',
-  display: 'swap',
+  variable: "--font-app-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -46,7 +49,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0D9488',
+  themeColor: '#f4f1eb',
   width: 'device-width',
   initialScale: 1,
 }
@@ -60,10 +63,12 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${dmSans.variable} ${sourceSerif.variable} ${jetbrainsMono.variable}`}
+      className={`${newsreader.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="font-sans antialiased bg-background text-foreground">
-        {children}
+      <body className="font-sans antialiased bg-background text-foreground" suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

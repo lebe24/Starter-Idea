@@ -24,7 +24,7 @@ interface ChatHistoryProps {
 function EmptyState() {
   return (
     <>
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
+      <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-muted">
         <MessageSquare className="h-7 w-7 text-muted-foreground" />
       </div>
       <div className="max-w-md space-y-2">
@@ -150,7 +150,7 @@ export function ChatHistory({
   return (
     <div className="relative flex h-full min-h-0 flex-1 flex-col">
       <ChatContainerRoot
-        className="h-full min-h-0 w-full flex-1 rounded-2xl border border-border bg-card/50 px-3 py-4 md:px-4"
+        className="h-full min-h-0 w-full flex-1 rounded-lg border border-border bg-card/50 px-3 py-4 md:px-4"
         aria-busy={isLoading}
         aria-relevant="additions text"
       >

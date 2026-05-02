@@ -87,7 +87,6 @@ const severityConfig = {
   low: { label: "Low", color: "bg-muted text-muted-foreground" },
 };
 
-const cardShadow = "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
 
 export function IncidentsContent() {
   const [selectedIncident, setSelectedIncident] = useState(incidents[0]);
@@ -136,12 +135,11 @@ export function IncidentsContent() {
               type="button"
               onClick={() => setSelectedIncident(incident)}
               className={cn(
-                "w-full text-left p-4 rounded-2xl border transition-all",
+                "w-full text-left p-4 rounded-lg border transition-all",
                 selectedIncident.id === incident.id
-                  ? "bg-card border-primary/30 shadow-md"
-                  : "bg-card border-border hover:border-primary/20"
+                  ? "bg-card border-accent/70 shadow-sm"
+                  : "bg-card border-border/90 hover:border-accent/30"
               )}
-              style={{ boxShadow: selectedIncident.id === incident.id ? cardShadow : "none" }}
             >
               <div className="flex items-start justify-between mb-2">
                 <span className={cn(
@@ -173,10 +171,7 @@ export function IncidentsContent() {
       </div>
 
       {/* Incident Detail */}
-      <div 
-        className="flex-1 bg-card rounded-2xl border border-border p-6 overflow-y-auto"
-        style={{ boxShadow: cardShadow }}
-      >
+      <div className="flex-1 bg-card rounded-lg border border-border p-6 overflow-y-auto">
         <div className="flex items-start justify-between mb-6">
           <div>
             <div className="flex items-center gap-3 mb-2">

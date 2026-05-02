@@ -115,7 +115,6 @@ const recentOutages = [
   },
 ];
 
-const cardShadow = "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
 
 export function SlaContent() {
   return (
@@ -125,9 +124,7 @@ export function SlaContent() {
         {slaMetrics.map((metric) => (
           <div
             key={metric.label}
-            className="bg-card rounded-2xl p-5 border border-border"
-            style={{ boxShadow: cardShadow }}
-          >
+            className="bg-card rounded-lg p-5 border border-border">
             <div className="flex items-start justify-between mb-3">
               <p className="text-sm text-muted-foreground">{metric.label}</p>
               <div className={cn(
@@ -149,9 +146,7 @@ export function SlaContent() {
 
       {/* Uptime Chart */}
       <div
-        className="bg-card rounded-2xl p-6 border border-border"
-        style={{ boxShadow: cardShadow }}
-      >
+        className="bg-card rounded-lg p-6 border border-border">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-base font-semibold text-foreground">Uptime History</h3>
@@ -207,9 +202,7 @@ export function SlaContent() {
       <div className="grid grid-cols-2 gap-6">
         {/* Service SLA Status */}
         <div
-          className="bg-card rounded-2xl border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg border border-border">
           <div className="p-6 border-b border-border">
             <h3 className="text-base font-semibold text-foreground">Service SLA Status</h3>
             <p className="text-sm text-muted-foreground">Current month performance</p>
@@ -248,9 +241,7 @@ export function SlaContent() {
 
         {/* Recent Outages */}
         <div
-          className="bg-card rounded-2xl border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg border border-border">
           <div className="p-6 border-b border-border">
             <h3 className="text-base font-semibold text-foreground">Recent Outages</h3>
             <p className="text-sm text-muted-foreground">Resolved incidents affecting SLA</p>

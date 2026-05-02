@@ -100,7 +100,6 @@ const metrics = [
   { label: "Escalations", value: "2", change: "+1", good: false },
 ];
 
-const cardShadow = "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
 
 export function OncallContent() {
   return (
@@ -110,9 +109,7 @@ export function OncallContent() {
         {metrics.map((metric) => (
           <div
             key={metric.label}
-            className="bg-card rounded-2xl p-5 border border-border"
-            style={{ boxShadow: cardShadow }}
-          >
+            className="bg-card rounded-lg p-5 border border-border">
             <p className="text-sm text-muted-foreground mb-1">{metric.label}</p>
             <div className="flex items-end justify-between">
               <p className="text-2xl font-semibold text-foreground">{metric.value}</p>
@@ -130,9 +127,7 @@ export function OncallContent() {
       <div className="grid grid-cols-3 gap-6">
         {/* Current Schedule */}
         <div
-          className="bg-card rounded-2xl border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg border border-border">
           <div className="p-6 border-b border-border">
             <h3 className="text-base font-semibold text-foreground">Current Schedule</h3>
             <p className="text-sm text-muted-foreground">On-call rotation this week</p>
@@ -177,9 +172,7 @@ export function OncallContent() {
 
         {/* Response Time Chart */}
         <div
-          className="col-span-2 bg-card rounded-2xl p-6 border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="col-span-2 bg-card rounded-lg p-6 border border-border">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-semibold text-foreground">Response Times</h3>
@@ -227,9 +220,7 @@ export function OncallContent() {
 
       {/* Recent Pages */}
       <div
-        className="bg-card rounded-2xl border border-border"
-        style={{ boxShadow: cardShadow }}
-      >
+        className="bg-card rounded-lg border border-border">
         <div className="p-6 border-b border-border">
           <h3 className="text-base font-semibold text-foreground">Recent Pages</h3>
           <p className="text-sm text-muted-foreground">Latest alerts and incidents</p>

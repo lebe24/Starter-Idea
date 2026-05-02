@@ -71,11 +71,11 @@ export function RightPanel({ ideaFilters, onIdeaFiltersChange }: RightPanelProps
   };
 
   return (
-    <aside className="w-[280px] h-screen bg-card border-l border-border flex flex-col shrink-0 overflow-y-auto">
-      <div className="p-5 border-b border-border">
-        <h3 className="text-sm font-medium text-foreground mb-4 flex items-center gap-2">
-          <Filter className="w-4 h-4 text-muted-foreground" />
-          Idea Filters
+    <aside className="flex h-screen w-[280px] shrink-0 flex-col overflow-y-auto border-l border-border/80 bg-sidebar">
+      <div className="border-b border-border/80 p-5">
+        <h3 className="mb-4 flex items-center gap-2 font-serif text-base font-normal text-foreground">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          Idea filters
         </h3>
 
         <div className="space-y-3">

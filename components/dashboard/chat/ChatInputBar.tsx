@@ -39,7 +39,7 @@ export const ChatInputBar = forwardRef<HTMLTextAreaElement, ChatInputBarProps>(f
 
   return (
     <div className="border-t border-border bg-card p-3 sm:p-4 shrink-0">
-      <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-2xl border border-border bg-background p-2 shadow-sm">
+      <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-lg border border-border bg-background p-2 shadow-sm">
         <Textarea
           ref={mergeRefs(textareaRef, forwardedRef)}
           value={value}

@@ -32,7 +32,6 @@ const statusConfig = {
   maintenance: { label: "Unscored", color: "text-muted-foreground", bgColor: "bg-muted", icon: Brain },
 };
 
-const cardShadow = "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
 
 function parseScore(score: string): number | null {
   const parsed = Number.parseFloat(score);
@@ -102,9 +101,7 @@ export function ServicesContent({ ideaFilters }: ServicesContentProps) {
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={`summary-skeleton-${index}`}
-              className="bg-card rounded-2xl p-5 border border-border space-y-3"
-              style={{ boxShadow: cardShadow }}
-            >
+              className="bg-card rounded-lg p-5 border border-border space-y-3">
               <Skeleton className="h-3 w-20 animate-shimmer rounded-md" />
               <Skeleton className="h-7 w-14 animate-shimmer rounded-md" />
             </div>
@@ -115,9 +112,7 @@ export function ServicesContent({ ideaFilters }: ServicesContentProps) {
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={`idea-skeleton-${index}`}
-              className="bg-card rounded-2xl border border-border p-6 space-y-4"
-              style={{ boxShadow: cardShadow }}
-            >
+              className="bg-card rounded-lg border border-border p-6 space-y-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <Skeleton className="w-10 h-10 rounded-xl animate-shimmer" />
@@ -158,30 +153,22 @@ export function ServicesContent({ ideaFilters }: ServicesContentProps) {
       {/* Summary */}
       <div className="grid grid-cols-4 gap-4">
         <div
-          className="bg-card rounded-2xl p-5 border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg p-5 border border-border">
           <p className="text-sm text-muted-foreground mb-1">Total Ideas</p>
           <p className="text-2xl font-semibold text-foreground">{stats.totalShown}</p>
         </div>
         <div
-          className="bg-card rounded-2xl p-5 border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg p-5 border border-border">
           <p className="text-sm text-muted-foreground mb-1">High Score (80+)</p>
           <p className="text-2xl font-semibold text-success">{healthyCount}</p>
         </div>
         <div
-          className="bg-card rounded-2xl p-5 border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg p-5 border border-border">
           <p className="text-sm text-muted-foreground mb-1">Mid Score (60-79)</p>
           <p className="text-2xl font-semibold text-warning">{degradedCount}</p>
         </div>
         <div
-          className="bg-card rounded-2xl p-5 border border-border"
-          style={{ boxShadow: cardShadow }}
-        >
+          className="bg-card rounded-lg p-5 border border-border">
           <p className="text-sm text-muted-foreground mb-1">Low Score (&lt;60)</p>
           <p className="text-2xl font-semibold text-destructive">{downCount}</p>
         </div>
@@ -196,9 +183,7 @@ export function ServicesContent({ ideaFilters }: ServicesContentProps) {
           return (
             <div
               key={idea.idea}
-              className="bg-card rounded-2xl border border-border p-6 hover:border-primary/20 transition-colors"
-              style={{ boxShadow: cardShadow }}
-            >
+              className="bg-card rounded-lg border border-border p-6 hover:border-primary/20 transition-colors">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", status.bgColor)}>
@@ -264,9 +249,7 @@ export function ServicesContent({ ideaFilters }: ServicesContentProps) {
       </div>
 
       <details
-        className="bg-card rounded-2xl border border-border p-6"
-        style={{ boxShadow: cardShadow }}
-      >
+        className="bg-card rounded-lg border border-border p-6">
         <summary className="cursor-pointer text-sm font-semibold text-foreground">
           Revenue by Growth Tactic
         </summary>

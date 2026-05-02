@@ -11,7 +11,6 @@ interface GitHubFeedsWidgetProps {
   onIdeaSelect: (idea: IdeaRecord) => void;
 }
 
-const cardShadow = "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
 
 export function GitHubFeedsWidget({ ideas, onIdeaSelect }: GitHubFeedsWidgetProps) {
   const [activeFeed, setActiveFeed] = useState<GHFeedType>("saas");
@@ -23,7 +22,8 @@ export function GitHubFeedsWidget({ ideas, onIdeaSelect }: GitHubFeedsWidgetProp
     cachedAt: null,
   });
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [now, setNow] = useState(Date.now());
+  /** Avoid Date.now() during SSR initial state (server vs client mismatch). */
+  const [now, setNow] = useState<number | null>(null);
 
   const fetchFeed = useCallback(async (feed: GHFeedType, silent = false) => {
     if (!silent) {
@@ -67,6 +67,7 @@ export function GitHubFeedsWidget({ ideas, onIdeaSelect }: GitHubFeedsWidgetProp
   }, [activeFeed, fetchFeed]);
 
   useEffect(() => {
+    setNow(Date.now());
     const ticker = setInterval(() => setNow(Date.now()), 60_000);
     return () => clearInterval(ticker);
   }, []);
@@ -80,10 +81,12 @@ export function GitHubFeedsWidget({ ideas, onIdeaSelect }: GitHubFeedsWidgetProp
   }, [activeFeed, feedState.saas, feedState.ai, ideas]);
 
   const lastUpdated =
-    feedState.cachedAt ? `${Math.max(1, Math.floor((now - feedState.cachedAt.getTime()) / 60_000))}m ago` : "just now";
+    feedState.cachedAt && now != null
+      ? `${Math.max(1, Math.floor((now - feedState.cachedAt.getTime()) / 60_000))}m ago`
+      : "just now";
 
   return (
-    <div className="bg-card rounded-2xl p-6 border border-border h-[520px] max-h-[520px] flex flex-col" style={{ boxShadow: cardShadow }}>
+    <div className="bg-card rounded-lg p-6 border border-border h-[520px] max-h-[520px] flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Github className="w-4 h-4 text-muted-foreground" />

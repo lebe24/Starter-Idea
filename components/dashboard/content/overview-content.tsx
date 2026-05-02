@@ -17,13 +17,14 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip as ChartTooltip,
   ResponsiveContainer,
   BarChart,
   Bar,
 } from "recharts";
-import type { Section } from "@/app/page";
+import type { Section } from "@/lib/dashboard-section";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { GitHubFeedsWidget } from "@/components/dashboard/overview/GitHubFeedsWidget";
 import { defaultIdeaFilters, type IdeaFilters, type IdeaRecord } from "@/lib/ideas-data";
 import type { FeedSource, HNStory, PHPost, RSSItem } from "@/lib/overview-types";
@@ -41,7 +42,6 @@ interface OverviewContentProps {
   onIdeaFiltersChange: (next: IdeaFilters) => void;
 }
 
-const cardShadow = "rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px";
 const TECHCRUNCH_FEED = "https://api.rss2json.com/v1/api.json?rss_url=https://techcrunch.com/feed/";
 
 function toRelativeTime(value: Date): string {
@@ -81,7 +81,11 @@ export function OverviewContent({
   const [isLoadingIdeas, setIsLoadingIdeas] = useState(true);
   const [isLoadingFeed, setIsLoadingFeed] = useState(true);
   const [feedError, setFeedError] = useState<string | null>(null);
-  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setLastRefreshed(new Date());
+  }, []);
 
   const refreshFeed = useCallback(async () => {
     setFeedError(null);
@@ -216,8 +220,7 @@ export function OverviewContent({
           ? Array.from({ length: 4 }).map((_, index) => (
               <div
                 key={`metric-skeleton-${index}`}
-                className="bg-card rounded-2xl p-5 border border-border space-y-3"
-                style={{ boxShadow: cardShadow }}
+                className="bg-card rounded-lg p-5 border border-border space-y-3"
               >
                 <Skeleton className="h-10 w-10 rounded-xl animate-shimmer" />
                 <Skeleton className="h-7 w-16 animate-shimmer" />
@@ -229,8 +232,7 @@ export function OverviewContent({
           return (
             <div
               key={metric.label}
-              className="bg-card rounded-2xl p-5 border border-border"
-              style={{ boxShadow: cardShadow }}
+              className="bg-card rounded-lg p-5 border border-border"
             >
               <div className="flex items-start justify-between mb-3">
                     <div className={`p-2.5 rounded-xl ${metric.color}`}>
@@ -260,8 +262,7 @@ export function OverviewContent({
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         {/* Score Distribution / Revenue Chart */}
         <div
-          className="xl:col-span-2 bg-card rounded-2xl p-6 border border-border"
-          style={{ boxShadow: cardShadow }}
+          className="xl:col-span-2 bg-card rounded-lg p-6 border border-border"
         >
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -313,7 +314,7 @@ export function OverviewContent({
                   tick={{ fill: "oklch(0.55 0.01 250)", fontSize: 12 }}
                   axisLine={{ stroke: "oklch(0.92 0.005 250)" }}
                 />
-                <Tooltip 
+                <ChartTooltip
                     formatter={(value, _, payload) => {
                       const count = String(value);
                       const label = payload?.payload?.label ?? "";
@@ -353,7 +354,7 @@ export function OverviewContent({
                     axisLine={{ stroke: "oklch(0.92 0.005 250)" }}
                     width={120}
                   />
-                  <Tooltip
+                  <ChartTooltip
                     formatter={(value, _, payload) => [
                       `Avg ${formatRevenueK(Number(value))} across ${payload?.payload?.ideaCount ?? 0} ideas`,
                       "Revenue",
@@ -374,8 +375,7 @@ export function OverviewContent({
 
         {/* Startup Feed */}
         <div
-          className="bg-card rounded-2xl p-6 border border-border"
-          style={{ boxShadow: cardShadow }}
+          className="bg-card rounded-lg p-6 border border-border"
         >
           <div className="flex items-start justify-between mb-3">
             <div>
@@ -459,13 +459,22 @@ export function OverviewContent({
                     </a>
                     <p className="text-xs text-muted-foreground mt-1">{item.meta}</p>
                     {item.relatedIdea ? (
-                      <button
-                        type="button"
-                        onClick={() => navigateToIdea(item.relatedIdea as IdeaRecord)}
-                        className="mt-2 text-xs rounded-full bg-primary/10 text-primary px-2 py-1 hover:bg-primary/15"
-                      >
-                        {"->"} {item.relatedIdea.idea}
-                      </button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            onClick={() => navigateToIdea(item.relatedIdea as IdeaRecord)}
+                            className="mt-2 h-8 max-w-full inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2.5 text-xs hover:bg-primary/15 overflow-hidden"
+                            aria-label={`Open idea: ${item.relatedIdea.idea}`}
+                          >
+                            <span className="shrink-0">{"->"}</span>
+                            <span className="min-w-0 truncate">{item.relatedIdea.idea}</span>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs">
+                          {item.relatedIdea.idea}
+                        </TooltipContent>
+                      </Tooltip>
                     ) : null}
                   </article>
                 ))}
@@ -473,15 +482,15 @@ export function OverviewContent({
               <p className="text-sm text-muted-foreground">No stories found for this source.</p>
             ) : null}
           </div>
-          <p className="text-[11px] text-muted-foreground mt-3">
-            Last refreshed {toRelativeTime(lastRefreshed)}
+          <p className="mt-3 text-[11px] text-muted-foreground">
+            {lastRefreshed ? `Last refreshed ${toRelativeTime(lastRefreshed)}` : "Last refreshed —"}
           </p>
         </div>
       </div>
 
       {/* Insights Row */}
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="bg-card rounded-2xl p-6 border border-border" style={{ boxShadow: cardShadow }}>
+        <div className="bg-card rounded-lg p-6 border border-border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-foreground">Top Ideas by Solopreneur Score</h3>
             <span className="text-xs text-muted-foreground">Start cost ≤ $1K</span>
@@ -517,8 +526,7 @@ export function OverviewContent({
         <button
           type="button"
           onClick={() => onSectionChange("ideas")}
-          className="text-left bg-card rounded-2xl p-5 border border-border hover:bg-muted/40 transition-colors"
-          style={{ boxShadow: cardShadow }}
+          className="text-left bg-card rounded-lg p-5 border border-border hover:bg-muted/40 transition-colors"
         >
           <Brain className="w-5 h-5 text-chart-1 mb-3" />
           <p className="font-semibold text-foreground">Browse Ideas</p>
@@ -528,8 +536,7 @@ export function OverviewContent({
         <button
           type="button"
           onClick={() => onSectionChange("chat")}
-          className="text-left bg-card rounded-2xl p-5 border border-border hover:bg-muted/40 transition-colors"
-        style={{ boxShadow: cardShadow }}
+          className="text-left bg-card rounded-lg p-5 border border-border hover:bg-muted/40 transition-colors"
       >
           <Sparkles className="w-5 h-5 text-chart-2 mb-3" />
           <p className="font-semibold text-foreground">Ask AI</p>
@@ -546,8 +553,7 @@ export function OverviewContent({
             });
             onSectionChange("ideas");
           }}
-          className="text-left bg-card rounded-2xl p-5 border border-border hover:bg-muted/40 transition-colors"
-          style={{ boxShadow: cardShadow }}
+          className="text-left bg-card rounded-lg p-5 border border-border hover:bg-muted/40 transition-colors"
         >
           <Clock className="w-5 h-5 text-success mb-3" />
           <p className="font-semibold text-foreground">Zero-Cost Picks</p>
