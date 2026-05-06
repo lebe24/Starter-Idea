@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/img/website-banner.png" alt="video-use" width="100%">
+  <img src="public/img/website-banner.png" alt="starter-idea-banner" width="100%">
 </p>
 
 # SaaS Ideas
