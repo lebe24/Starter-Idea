@@ -27,7 +27,7 @@ export default function HomePage() {
         <main className="mt-[min(18vh,9rem)] flex flex-1 flex-col md:mt-[min(22vh,11rem)]">
           <div className="border-l border-[oklch(0.78_0.14_75)] pl-6 md:pl-8">
             <h1 className="font-serif max-w-[15ch] text-[clamp(2.25rem,6vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em] motion-safe:animate-[landing-enter_0.9s_ease-out_both]">
-              Your idea worthless until you build it.
+              Your idea is worthless until you build it.
             </h1>
             <p className="mt-8 max-w-md text-lg font-normal leading-relaxed text-[oklch(0.38_0.02_265)] motion-safe:animate-[landing-enter_0.9s_ease-out_0.12s_both]">
               Explore 190+ Saas idea, chat with AI about any idea, see the market size, competitors, and more.
