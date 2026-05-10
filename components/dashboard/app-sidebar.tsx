@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { AppLogo } from "@/components/dashboard/app-logo";
 import { cn } from "@/lib/utils";
 import type { Section } from "@/lib/dashboard-section";
 import {
@@ -24,6 +25,7 @@ interface AppSidebarProps {
   isRightPanelOpen: boolean;
   onToggleRightPanel: () => void;
   hasActiveChat?: boolean;
+  className?: string;
 }
 
 interface NavItem {
@@ -47,6 +49,7 @@ export function AppSidebar({
   isRightPanelOpen,
   onToggleRightPanel,
   hasActiveChat = false,
+  className,
 }: AppSidebarProps) {
   const [isLeftPanelCollapsed, setIsLeftPanelCollapsed] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -62,35 +65,14 @@ export function AppSidebar({
   return (
     <aside
       className={cn(
-        "h-screen flex flex-col shrink-0 border-r border-border/80 bg-sidebar transition-[width] duration-200",
-        isLeftPanelCollapsed ? "w-[88px]" : "w-[260px]"
+        "hidden h-screen shrink-0 border-r border-border/80 bg-sidebar transition-[width] duration-200 lg:flex lg:flex-col",
+        isLeftPanelCollapsed ? "w-[88px]" : "w-[260px]",
+        className,
       )}
     >
       {/* Logo */}
       <div className="flex h-16 items-center gap-3 border-b border-border/80 px-5">
-        <div
-          className={cn(
-            "flex items-center justify-center rounded-md border border-border/90 bg-muted/25 transition-all",
-            isLeftPanelCollapsed ? "h-8 w-8" : "h-9 w-9 sm:h-10 sm:w-10"
-          )}
-        >
-          <span
-            className={cn(
-              "font-mono font-semibold tracking-[0.14em] text-foreground",
-              isLeftPanelCollapsed ? "text-[9px]" : "text-[10px] sm:text-[11px]"
-            )}
-          >
-            SI
-          </span>
-        </div>
-        <span
-          className={cn(
-            "font-serif text-[17px] font-normal tracking-tight text-foreground",
-            isLeftPanelCollapsed && "hidden"
-          )}
-        >
-          Starter Idea
-        </span>
+        <AppLogo showWordmark={!isLeftPanelCollapsed} compact={isLeftPanelCollapsed} />
         <button
           type="button"
           onClick={() => setIsLeftPanelCollapsed((prev) => !prev)}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
-import { Filter, RotateCcw, Search } from "lucide-react";
+import { Filter, RotateCcw, Search, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   computeIdeaStats,
   defaultIdeaFilters,
@@ -24,9 +25,11 @@ const tacticOptions = [
 interface RightPanelProps {
   ideaFilters: IdeaFilters;
   onIdeaFiltersChange: Dispatch<SetStateAction<IdeaFilters>>;
+  className?: string;
+  onMobileClose?: () => void;
 }
 
-export function RightPanel({ ideaFilters, onIdeaFiltersChange }: RightPanelProps) {
+export function RightPanel({ ideaFilters, onIdeaFiltersChange, className, onMobileClose }: RightPanelProps) {
   const [ideas, setIdeas] = useState<IdeaRecord[]>([]);
   const filters = ideaFilters;
   const setFilters = onIdeaFiltersChange;
@@ -71,9 +74,29 @@ export function RightPanel({ ideaFilters, onIdeaFiltersChange }: RightPanelProps
   };
 
   return (
-    <aside className="flex h-screen w-[280px] shrink-0 flex-col overflow-y-auto border-l border-border/80 bg-sidebar">
+    <aside
+      className={cn(
+        "flex h-screen w-[min(100vw,280px)] shrink-0 flex-col overflow-y-auto border-l border-border/80 bg-sidebar",
+        "max-lg:fixed max-lg:right-0 max-lg:top-0 max-lg:z-50 max-lg:shadow-2xl",
+        "lg:relative lg:z-auto",
+        className,
+      )}
+    >
+      {onMobileClose ? (
+        <div className="flex items-center justify-between border-b border-border/80 px-4 py-3 lg:hidden">
+          <span className="font-medium text-foreground">Idea filters</span>
+          <button
+            type="button"
+            onClick={onMobileClose}
+            className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Close filters"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      ) : null}
       <div className="border-b border-border/80 p-5">
-        <h3 className="mb-4 flex items-center gap-2 font-serif text-base font-normal text-foreground">
+        <h3 className="mb-4 flex items-center gap-2 font-serif text-base font-normal text-foreground max-lg:hidden">
           <Filter className="h-4 w-4 text-muted-foreground" />
           Idea filters
         </h3>
